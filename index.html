@@ -41,7 +41,7 @@
 
 <!-- // add the svg element below <body>
 // svg is the entire rectangle that surrounds the slider -->
-<svg width="960" height="200"></svg>
+<svg width="960" height="100"></svg>
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script>
 
@@ -96,27 +96,30 @@ slider.insert("g", ".track-overlay")
   .enter().append("text")
     .attr("x", x)
     .attr("text-anchor", "middle")
-    .text(function(d) { return d; });
+    .text(function(d) { return d/100; });
 
 // this is just the size of the slider circle.
 var handle = slider.insert("circle", ".track-overlay")
     .attr("class", "handle")
     .attr("r", 9);
 
-slider.transition() // Gratuitous intro!
-    .duration(0)
-   .tween("hue", function() {
-      var i = d3.interpolate(70, 70);
-      return function(t) { hue(i(t)); };
-    });
+
+
+
 
 function hue(h) {
   // change the position of the circle
   handle.attr("cx", x(h));
-  console.log(h);
+  var flt_rounded_position = Math.round(h * 10);
+
+  console.log(flt_rounded_position);
   svg.style("background-color", d3.hsl(h, 0.8, 0.8));
  // console.log("hi there");
 }
+
+
+// initialise
+hue(50);
 
 </script>
 
