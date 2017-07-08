@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.ticks {
+  font: 10px sans-serif;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}
+
+</style>
+
+<!-- // add the svg element below <body>
+// svg is the entire rectangle that surrounds the slider -->
+<svg width="960" height="200"></svg>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script>
+
+// select the svg element 
+// width = 960 - 20 - 50 ===> 890
+
+// this var is a bit funny all the
+// following four elements are var
+var svg = d3.select("svg"),
+    margin = {right: 50, left: 20},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height");
+
+// define the domain and range of x
+// x(90) =====>  890/2 == > 445
+var x = d3.scaleLinear()
+    .domain([0, 100])
+    .range([0, width])
+    .clamp(true);
+
+// append a <g> element beneath the <svg> element
+var slider = svg.append("g")
+    .attr("class", "slider")
+    .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+
+slider.append("line")
+    .attr("class", "track")
+    // x.range()  == > [0, 890]
+    // this x.range()[0] returns 0
+    .attr("x1", x.range()[0])
+    // this x.range()[1] returns 890
+    .attr("x2", x.range()[1])
+  
+  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-inset")
+  
+  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "track-overlay")
+    .call(d3.drag()
+        .on("start.interrupt", function() { slider.interrupt(); })
+        .on("start drag", function() { hue(x.invert(d3.event.x)); }));
+
+slider.insert("g", ".track-overlay")
+    .attr("class", "ticks")
+    // 18 is the number of pixels underneath the slider
+    .attr("transform", "translate(0," + 18 + ")")
+  
+  .selectAll("text")
+  // x.ticks(10) returns array of 10 numbers from x.min to x.max as determined by domain
+  .data(x.ticks(10))
+  // appends 10 <text/>  elements
+  .enter().append("text")
+    .attr("x", x)
+    .attr("text-anchor", "middle")
+    .text(function(d) { return d + "°"; });
+
+// this is just the size of the slider circle.
+var handle = slider.insert("circle", ".track-overlay")
+    .attr("class", "handle")
+    .attr("r", 9);
+
+slider.transition() // Gratuitous intro!
+    .duration(0)
+   .tween("hue", function() {
+      var i = d3.interpolate(70, 70);
+      return function(t) { hue(i(t)); };
+    });
+
+function hue(h) {
+  // change the position of the circle
+  handle.attr("cx", x(h));
+  console.log(h);
+  svg.style("background-color", d3.hsl(h, 0.8, 0.8));
+ // console.log("hi there");
+}
+
+</script>
+
+
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+
