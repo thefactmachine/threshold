@@ -96,7 +96,7 @@ slider.insert("g", ".track-overlay")
   .enter().append("text")
     .attr("x", x)
     .attr("text-anchor", "middle")
-    .text(function(d) { return d + "°"; });
+    .text(function(d) { return d; });
 
 // this is just the size of the slider circle.
 var handle = slider.insert("circle", ".track-overlay")
