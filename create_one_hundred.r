@@ -19,7 +19,7 @@ df_data <- data.frame(index = vct_index, one = vct_col_1, two = vct_col_2, three
 # create array of numbers
 vct_array <- sapply(1:nrow(df_data), function(x) {
         str_num <- paste(df_data[x, 2:5], collapse = ",")
-        str_arr <- paste0("[", str_num, "]")
+        return(paste0("[", str_num, "]"))
   })
 
 char_quote <- "\""
@@ -30,6 +30,7 @@ str_obj_arr <- substr(str_obj_arr, 1, nchar(str_obj_arr) -1)
 # add the curly brackets
 str_obj_arr <- paste0("{", str_obj_arr, "}")
 
+cat(str_obj_arr)
 
 
 
