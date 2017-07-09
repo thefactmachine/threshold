@@ -20,11 +20,15 @@ var svg = d3.select("svg"),
 // padding_Innter determines the spacing between bars.
 // width is the horizontal width of the graph.
 // cant see what align does...???
+// so we dont set the domain...we wait till we see the data...
+// domain will be equal to the states...
+
 var x = d3.scaleBand()
     .rangeRound([0, width])
     .paddingInner(0.5)
     .align(0.1);
 
+// height is 450...note the weird way that height is defined first, ie [450, 0]
 var y = d3.scaleLinear()
     .rangeRound([height, 0]);
 
@@ -53,10 +57,23 @@ d3.csv("data.csv", function(d, i, columns) {
   array_of_state_names = global_data.map(function(d) { return d.State; });
   x.domain(data.map(function(d) { return d.State; }));
 
+  // this is how x evaluates.
   // x("FL") == > 39 ; x("KY") ==> 468
 
+  // set the y.domain
+  // max is 36756666  // total for california..
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
+
+
+  // z("Under 5 Years") =====> "#98abc5"
   z.domain(keys);
+
+  // mark is array of length = 7 
+  // each of the 7 has 23 elements.... 
+  // 23 is the number of states....
+  // so there are 7 <g> elements and each as their own specific fill
+  // within each <g> element...there are 23 rectangles...
+  // mark = d3.stack().keys(keys)(global_data)
 
   g.append("g")
     .selectAll("g")
@@ -71,17 +88,19 @@ d3.csv("data.csv", function(d, i, columns) {
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth());
 
+  // append bottom axis
   g.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
+  // append y axis.  
   g.append("g")
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(null, "s"))
 
     .append("text")
-      .attr("x", 2)
+     .attr("x", 2)
       .attr("y", y(y.ticks().pop()) + 0.5)
       .attr("dy", "0.32em")
       .attr("fill", "#000")
