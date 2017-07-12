@@ -256,7 +256,12 @@ vct_calc_precision <- dfThold[, c("tp")]  / vct_calc_denom_precision
 vct_calc_precision <- ifelse(is.na(vct_calc_precision), 1, vct_calc_precision)
 dfThold$c_precis <- vct_calc_precision
 
+df_probs <- dfThold
 # I think these last two rows are better calculations for precision and recall.....
+
+
+
+
 
 
 #=======================================

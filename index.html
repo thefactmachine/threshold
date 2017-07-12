@@ -41,7 +41,7 @@
 
 <!-- // add the svg element below <body>
 // svg is the entire rectangle that surrounds the slider -->
-<svg width="960" height="100"></svg>
+<svg id="slider" width="500" height="100"></svg>
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script>
 
@@ -50,10 +50,10 @@
 
 // this var is a bit funny all the
 // following four elements are var
-var svg = d3.select("svg"),
+var svg_slider = d3.select("#slider"),
     margin = {right: 50, left: 20},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height");
+    width = +svg_slider.attr("width") - margin.left - margin.right,
+    height = +svg_slider.attr("height");
 
 // define the domain and range of x
 // x(90) =====>  890/2 == > 445
@@ -63,7 +63,7 @@ var x = d3.scaleLinear()
     .clamp(true);
 
 // append a <g> element beneath the <svg> element
-var slider = svg.append("g")
+var slider = svg_slider.append("g")
     .attr("class", "slider")
     .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
 
@@ -122,7 +122,7 @@ function hue(h) {
   console.log(str_rounded_position);
   console.log("value of array " + big_test[str_rounded_position]);
 
-  svg.style("background-color", d3.hsl(h, 0.8, 0.8));
+  svg_slider.style("background-color", d3.hsl(h, 0.8, 0.8));
  // console.log("hi there");
 }
 
